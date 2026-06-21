@@ -5,7 +5,7 @@ Standalone gang action resource for FiveM — zip tie players, put headbags on t
 ## Features
 
 - **Zip Ties** — Tie up nearby players using ox_target. Item consumed on use; returning it on removal is configurable. Anyone can untie.
-- **Headbag** — Put a bag over a player's head, fully blinding them with a NUI overlay. Item consumed on use; returning it on removal is configurable.
+- **Headbag** — Put a bag over a player's head with a configurable NUI transparency. Item consumed on use; returning it on removal is configurable.
 - **Vehicle Escort** — Put tied-up players into the nearest vehicle or take them out. Automatically finds a free seat.
 - **Persistence** — Player states are saved via KVP. If a player disconnects while tied up or headbagged, the state is restored on reconnect (survives server restarts).
 - **Locale System** — Full i18n support via `lib.locale()`. English and French included. Easy to add more languages.
@@ -51,6 +51,7 @@ Config = {}
 
 Config.Locale = 'fr'
 Config.Persistence = true
+Config.HeadbagTransparency = 0
 
 Config.Items = {
     cuffs = 'ziptie',
@@ -59,7 +60,7 @@ Config.Items = {
 
 Config.ReturnOnRemoval = {
     cuffs = false,
-    headbag = true,
+    headbag = false,
 }
 ```
 
@@ -67,6 +68,7 @@ Config.ReturnOnRemoval = {
 |--------|-------------|
 | `Config.Locale` | Language code (`en`, `fr`, or any custom locale file you add) |
 | `Config.Persistence` | Save and restore cuff/headbag states across reconnects and server restarts |
+| `Config.HeadbagTransparency` | Bag overlay transparency from `0` (opaque) to `100` (invisible) |
 | `Config.Items.cuffs` | ox_inventory item name for zip ties |
 | `Config.Items.headbag` | ox_inventory item name for headbags |
 | `Config.ReturnOnRemoval.cuffs` | Return the zip tie to the remover when set to `true` |

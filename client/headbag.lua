@@ -20,6 +20,7 @@ end
 
 local function applyHeadbag()
     local model = `prop_money_bag_01`
+    local transparency = math.min(math.max(tonumber(Config.HeadbagTransparency) or 0, 0), 100)
     lib.requestModel(model)
 
     headbagEntity = CreateObject(model, 0.0, 0.0, 0.0, true, true, true)
@@ -27,7 +28,10 @@ local function applyHeadbag()
         0.22, 0.04, 0.0, 0.0, 270.0, 60.0, true, true, false, true, 1, true)
     SetModelAsNoLongerNeeded(model)
 
-    SendNUIMessage({ type = 'bagOn' })
+    SendNUIMessage({
+        type = 'bagOn',
+        transparency = transparency,
+    })
     SetNuiFocus(false, false)
 end
 
