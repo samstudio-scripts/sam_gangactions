@@ -1,0 +1,13 @@
+{
+    "cuff_label": "Attacher",
+    "uncuff_label": "Détacher",
+    "put_in_vehicle": "Embarquer",
+    "take_out_vehicle": "Débarquer",
+    "no_vehicle_nearby": "Aucun véhicule à proximité",
+    "no_free_seat": "Aucune place disponible",
+
+    "headbag_label": "Mettre/Retirer le sac",
+    "headbag_put_on": "Vous avez mis un sac sur un joueur",
+    "headbag_taken_off": "Quelqu'un vous a retiré le sac",
+    "headbag_progress": "Sac en cours..."
+}

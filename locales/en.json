@@ -1,0 +1,13 @@
+{
+    "cuff_label": "Tie up",
+    "uncuff_label": "Untie",
+    "put_in_vehicle": "Put in vehicle",
+    "take_out_vehicle": "Take out of vehicle",
+    "no_vehicle_nearby": "No vehicle nearby",
+    "no_free_seat": "No free seat available",
+
+    "headbag_label": "Put/Remove bag",
+    "headbag_put_on": "You put a bag on a player",
+    "headbag_taken_off": "Someone removed your bag",
+    "headbag_progress": "Headbag..."
+}
