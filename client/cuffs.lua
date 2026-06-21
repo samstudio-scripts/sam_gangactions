@@ -105,10 +105,14 @@ local function getCuffedOccupant(vehicle)
         local ped = GetPedInVehicleSeat(vehicle, seat)
 
         if ped ~= 0 and IsPedAPlayer(ped) then
-            local playerId = NetworkGetPlayerIndexFromPed(ped)
+            local playerIndex = NetworkGetPlayerIndexFromPed(ped)
 
-            if playerId ~= -1 and Player(playerId).state.hasCuffs then
-                return ped
+            if playerIndex ~= -1 then
+                local serverId = GetPlayerServerId(playerIndex)
+
+                if serverId > 0 and Player(serverId).state.hasCuffs then
+                    return ped
+                end
             end
         end
     end

@@ -3,10 +3,11 @@ local headbagEntity = nil
 ---@param ped number
 ---@return boolean
 local function hasHeadbag(ped)
-    local playerId = NetworkGetPlayerIndexFromPed(ped)
-    if playerId == -1 then return false end
+    local playerIndex = NetworkGetPlayerIndexFromPed(ped)
+    if playerIndex == -1 then return false end
 
-    return Player(playerId).state.hasHeadbag == true
+    local serverId = GetPlayerServerId(playerIndex)
+    return serverId > 0 and Player(serverId).state.hasHeadbag == true
 end
 
 local function removeHeadbag()
