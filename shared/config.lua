@@ -2,7 +2,7 @@ Config = {}
 
 Config.Locale = 'fr'
 Config.Persistence = true
-Config.HeadbagTransparency = 50
+Config.HeadbagTransparency = 5
 
 Config.Items = {
     cuffs = 'ziptie',
