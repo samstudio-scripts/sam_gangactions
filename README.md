@@ -50,6 +50,7 @@ All configuration is in `shared/config.lua`:
 Config = {}
 
 Config.Locale = 'fr'
+Config.Persistence = true
 
 Config.Items = {
     cuffs = 'ziptie',
@@ -60,6 +61,7 @@ Config.Items = {
 | Option | Description |
 |--------|-------------|
 | `Config.Locale` | Language code (`en`, `fr`, or any custom locale file you add) |
+| `Config.Persistence` | Save and restore cuff/headbag states across reconnects and server restarts |
 | `Config.Items.cuffs` | ox_inventory item name for zip ties |
 | `Config.Items.headbag` | ox_inventory item name for headbags |
 

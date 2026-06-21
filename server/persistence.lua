@@ -10,6 +10,8 @@ end
 ---@param key string
 ---@param value boolean
 function SavePlayerState(source, key, value)
+    if not Config.Persistence then return end
+
     local license = getPlayerLicense(source)
     if not license then return end
 
@@ -23,6 +25,8 @@ function SavePlayerState(source, key, value)
 end
 
 lib.callback.register('sam_gangactions:server:restoreState', function(source)
+    if not Config.Persistence then return end
+
     local license = getPlayerLicense(source)
     if not license then return end
 
