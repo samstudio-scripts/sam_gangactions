@@ -6,8 +6,10 @@
     "no_vehicle_nearby": "No vehicle nearby",
     "no_free_seat": "No free seat available",
 
-    "headbag_label": "Put/Remove bag",
+    "headbag_put_label": "Put on headbag",
+    "headbag_remove_label": "Remove headbag",
     "headbag_put_on": "You put a bag on a player",
+    "headbag_removed": "You removed a player's headbag",
     "headbag_taken_off": "Someone removed your bag",
     "headbag_progress": "Headbag..."
 }

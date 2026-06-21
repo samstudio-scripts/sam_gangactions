@@ -25,5 +25,5 @@ lib.callback.register('sam_gangactions:server:toggleHeadbag', function(source, t
     Player(targetId).state.hasHeadbag = not hasBag
     SavePlayerState(targetId, 'headbag', not hasBag)
 
-    return true
+    return true, hasBag == true
 end)

@@ -6,8 +6,10 @@
     "no_vehicle_nearby": "Aucun véhicule à proximité",
     "no_free_seat": "Aucune place disponible",
 
-    "headbag_label": "Mettre/Retirer le sac",
+    "headbag_put_label": "Mettre le sac",
+    "headbag_remove_label": "Retirer le sac",
     "headbag_put_on": "Vous avez mis un sac sur un joueur",
+    "headbag_removed": "Vous avez retiré le sac d'un joueur",
     "headbag_taken_off": "Quelqu'un vous a retiré le sac",
     "headbag_progress": "Sac en cours..."
 }

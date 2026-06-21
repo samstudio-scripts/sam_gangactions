@@ -1,5 +1,14 @@
 local headbagEntity = nil
 
+---@param ped number
+---@return boolean
+local function hasHeadbag(ped)
+    local playerId = NetworkGetPlayerIndexFromPed(ped)
+    if playerId == -1 then return false end
+
+    return Player(playerId).state.hasHeadbag == true
+end
+
 local function removeHeadbag()
     if not headbagEntity then return end
 
@@ -49,22 +58,39 @@ local function toggleHeadbag(ped)
         return
     end
 
-    local success = lib.callback.await('sam_gangactions:server:toggleHeadbag', false, targetId)
+    local success, wasHeadbagged = lib.callback.await('sam_gangactions:server:toggleHeadbag', false, targetId)
 
     if success then
-        lib.notify({ description = locale('headbag_put_on'), type = 'success' })
+        local message = wasHeadbagged and locale('headbag_removed') or locale('headbag_put_on')
+        lib.notify({ description = message, type = 'success' })
     end
 end
 
 exports.ox_target:addGlobalPlayer({
     {
-        name = 'sam_gangactions:headbag',
+        name = 'sam_gangactions:putHeadbag',
         icon = 'fas fa-mask',
-        label = locale('headbag_label'),
+        label = locale('headbag_put_label'),
         distance = 2.0,
         items = Config.Items.headbag,
         canInteract = function(entity)
-            return GetVehiclePedIsIn(entity, false) == 0 and not LocalPlayer.state.invBusy
+            return GetVehiclePedIsIn(entity, false) == 0
+                and not hasHeadbag(entity)
+                and not LocalPlayer.state.invBusy
+        end,
+        onSelect = function(data)
+            toggleHeadbag(data.entity)
+        end,
+    },
+    {
+        name = 'sam_gangactions:removeHeadbag',
+        icon = 'fas fa-mask',
+        label = locale('headbag_remove_label'),
+        distance = 2.0,
+        canInteract = function(entity)
+            return GetVehiclePedIsIn(entity, false) == 0
+                and hasHeadbag(entity)
+                and not LocalPlayer.state.invBusy
         end,
         onSelect = function(data)
             toggleHeadbag(data.entity)

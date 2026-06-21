@@ -94,7 +94,8 @@ Then set `Config.Locale = 'es'` in the config.
 | Untie | `fa-handcuffs` | 1.5 | Target is cuffed, no item required |
 | Put in vehicle | `fa-car-side` | 2.5 | Target is cuffed and on foot |
 | Take out of vehicle | `fa-car-side` | 5.0 | Target is cuffed and in vehicle |
-| Headbag | `fa-mask` | 2.0 | Target on foot, requires headbag item |
+| Put on headbag | `fa-mask` | 2.0 | Target on foot, requires headbag item |
+| Remove headbag | `fa-mask` | 2.0 | Target is headbagged, no item required |
 
 ## Exports
 
