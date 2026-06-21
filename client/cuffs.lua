@@ -96,6 +96,24 @@ local function takeOutOfVehicle(targetPed)
     lib.callback.await('sam_gangactions:server:takeOutOfVehicle', false, targetId)
 end
 
+---@param vehicle number
+---@return number?
+local function getCuffedOccupant(vehicle)
+    local maxPassengers = GetVehicleMaxNumberOfPassengers(vehicle)
+
+    for seat = -1, maxPassengers - 1 do
+        local ped = GetPedInVehicleSeat(vehicle, seat)
+
+        if ped ~= 0 and IsPedAPlayer(ped) then
+            local playerId = NetworkGetPlayerIndexFromPed(ped)
+
+            if playerId ~= -1 and Player(playerId).state.hasCuffs then
+                return ped
+            end
+        end
+    end
+end
+
 -- Target client handlers (server tells cuffed player to enter/exit)
 
 RegisterNetEvent('sam_gangactions:client:putInVehicle', function(vehNetId, seat)
@@ -200,16 +218,22 @@ exports.ox_target:addGlobalPlayer({
             putInVehicle(data.entity)
         end,
     },
+})
+
+exports.ox_target:addGlobalVehicle({
     {
         name = 'sam_gangactions:takeOutOfVehicle',
         icon = 'fas fa-car-side',
         label = locale('take_out_vehicle'),
         distance = 5.0,
-        canInteract = function(entity)
-            return IsPedCuffed(entity) and GetVehiclePedIsIn(entity, false) ~= 0 and not LocalPlayer.state.invBusy
+        canInteract = function(vehicle)
+            return getCuffedOccupant(vehicle) ~= nil and not LocalPlayer.state.invBusy
         end,
         onSelect = function(data)
-            takeOutOfVehicle(data.entity)
+            local targetPed = getCuffedOccupant(data.entity)
+            if not targetPed then return end
+
+            takeOutOfVehicle(targetPed)
         end,
     },
 })

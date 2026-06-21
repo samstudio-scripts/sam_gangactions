@@ -46,7 +46,10 @@ lib.callback.register('sam_gangactions:server:takeOutOfVehicle', function(source
     if not GetPlayerName(targetId) then return false end
     if not Player(targetId).state.hasCuffs then return false end
 
-    if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(targetId))) > 15.0 then
+    local targetPed = GetPlayerPed(targetId)
+    if targetPed == 0 or GetVehiclePedIsIn(targetPed, false) == 0 then return false end
+
+    if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(targetPed)) > 15.0 then
         warn(('[sam_gangactions] %s (id:%d) failed distance check for takeOutOfVehicle on %d'):format(GetPlayerName(source), source, targetId))
         return false
     end
