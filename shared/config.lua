@@ -7,3 +7,8 @@ Config.Items = {
     cuffs = 'ziptie',
     headbag = 'headbag',
 }
+
+Config.ReturnOnRemoval = {
+    cuffs = false,
+    headbag = false,
+}

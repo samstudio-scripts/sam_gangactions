@@ -14,7 +14,13 @@ lib.callback.register('sam_gangactions:server:toggleCuffs', function(source, tar
 
     local wasCuffed = Player(targetId).state.hasCuffs
 
-    if not wasCuffed then
+    if wasCuffed then
+        if Config.ReturnOnRemoval.cuffs
+            and not exports.ox_inventory:AddItem(source, Config.Items.cuffs, 1)
+        then
+            return false
+        end
+    else
         if not exports.ox_inventory:RemoveItem(source, Config.Items.cuffs, 1) then
             return false
         end

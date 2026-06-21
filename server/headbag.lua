@@ -15,7 +15,11 @@ lib.callback.register('sam_gangactions:server:toggleHeadbag', function(source, t
     local hasBag = Player(targetId).state.hasHeadbag
 
     if hasBag then
-        exports.ox_inventory:AddItem(source, Config.Items.headbag, 1)
+        if Config.ReturnOnRemoval.headbag
+            and not exports.ox_inventory:AddItem(source, Config.Items.headbag, 1)
+        then
+            return false
+        end
     else
         if not exports.ox_inventory:RemoveItem(source, Config.Items.headbag, 1) then
             return false

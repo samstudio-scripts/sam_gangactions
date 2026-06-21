@@ -4,8 +4,8 @@ Standalone gang action resource for FiveM — zip tie players, put headbags on t
 
 ## Features
 
-- **Zip Ties** — Tie up nearby players using ox_target. Item consumed on use, destroyed on removal. Anyone can untie.
-- **Headbag** — Put a bag over a player's head, fully blinding them with a NUI overlay. Item consumed on use, returned on removal.
+- **Zip Ties** — Tie up nearby players using ox_target. Item consumed on use; returning it on removal is configurable. Anyone can untie.
+- **Headbag** — Put a bag over a player's head, fully blinding them with a NUI overlay. Item consumed on use; returning it on removal is configurable.
 - **Vehicle Escort** — Put tied-up players into the nearest vehicle or take them out. Automatically finds a free seat.
 - **Persistence** — Player states are saved via KVP. If a player disconnects while tied up or headbagged, the state is restored on reconnect (survives server restarts).
 - **Locale System** — Full i18n support via `lib.locale()`. English and French included. Easy to add more languages.
@@ -56,6 +56,11 @@ Config.Items = {
     cuffs = 'ziptie',
     headbag = 'headbag',
 }
+
+Config.ReturnOnRemoval = {
+    cuffs = false,
+    headbag = true,
+}
 ```
 
 | Option | Description |
@@ -64,6 +69,8 @@ Config.Items = {
 | `Config.Persistence` | Save and restore cuff/headbag states across reconnects and server restarts |
 | `Config.Items.cuffs` | ox_inventory item name for zip ties |
 | `Config.Items.headbag` | ox_inventory item name for headbags |
+| `Config.ReturnOnRemoval.cuffs` | Return the zip tie to the remover when set to `true` |
+| `Config.ReturnOnRemoval.headbag` | Return the headbag to the remover when set to `true` |
 
 ## Adding a Language
 
