@@ -1,6 +1,6 @@
 # sam_gangactions
 
-Gang action resource for FiveM: zip tie players, put headbags on them, and escort tied players into vehicles. Built with the ox ecosystem, state bags, framework-aware persistence, and server authority.
+Gang action resource for FiveM: zip tie players, put headbags on them, and escort tied players into vehicles. Built with state bags, framework-aware persistence, and server authority.
 
 ## Features
 
