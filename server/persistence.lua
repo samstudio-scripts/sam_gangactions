@@ -34,7 +34,6 @@ end
 
 local function hasCharacterFramework()
     return GetResourceState('qb-core') == 'started'
-        or GetResourceState('qbx_core') == 'started'
         or GetResourceState('es_extended') == 'started'
 end
 
@@ -51,15 +50,6 @@ local function getPlayerIdentifier(source)
             player = qbCore.Functions.GetPlayer(source)
         end
 
-        local citizenid = player and player.PlayerData and player.PlayerData.citizenid
-
-        if citizenid then
-            return ('citizenid:%s'):format(citizenid)
-        end
-    end
-
-    if GetResourceState('qbx_core') == 'started' then
-        local player = exports.qbx_core:GetPlayer(source)
         local citizenid = player and player.PlayerData and player.PlayerData.citizenid
 
         if citizenid then

@@ -1,14 +1,27 @@
 # sam_gangactions
 
-Standalone gang action resource for FiveM — zip tie players, put headbags on them, escort them into vehicles. Built with ox ecosystem, state bags, and server authority.
+Gang action resource for FiveM: zip tie players, put headbags on them, and escort tied players into vehicles. Built with the ox ecosystem, state bags, framework-aware persistence, and server authority.
 
 ## Features
 
-- **Zip Ties** — Tie up nearby players using ox_target. Item consumed on use; returning it on removal is configurable. Anyone can untie.
-- **Headbag** — Put a bag over a player's head with a configurable NUI transparency. Item consumed on use; returning it on removal is configurable.
-- **Vehicle Escort** — Put tied-up players into the nearest vehicle or take them out. Automatically finds a free seat.
-- **Persistence** — Player states are saved via KVP. If a player disconnects while tied up or headbagged, the state is restored on reconnect (survives server restarts).
-- **Locale System** — Full i18n support via `lib.locale()`. English and French included. Easy to add more languages.
+- **Zip ties**: Tie up nearby players using ox_target. Item consumed on use; returning it on removal is configurable. Anyone can untie.
+- **Headbag**: Put a bag over a player's head with configurable NUI transparency. Item consumed on use; returning it on removal is configurable.
+- **Vehicle escort**: Put tied players into the nearest vehicle or take them out. Automatically finds a free seat.
+- **Admin commands**: Admin-only commands can apply/remove zip ties and headbags without requiring items.
+- **Persistence**: Cuff/headbag states are saved with KVP and restored on reconnect, including after server restarts.
+- **Locale system**: Full i18n support through `lib.locale()`. English and French are included.
+
+## Framework Support
+
+The resource auto-detects the active framework for persistence.
+
+| Framework | Detection | Persistence key |
+|-----------|-----------|-----------------|
+| QBCore / Qbox bridge | `qb-core` | `PlayerData.citizenid` |
+| ESX Legacy | `es_extended` | `xPlayer.identifier` |
+| Standalone | no supported framework detected | Rockstar license/license2 |
+
+No framework configuration is required. Qbox support is handled through its qb-core bridge; there is no separate `qbx_core` persistence path.
 
 ## Dependencies
 
@@ -44,14 +57,14 @@ Config.Locale = 'en' -- or 'fr'
 
 ## Configuration
 
-All configuration is in `shared/config.lua`:
+All configuration is in `shared/config.lua`.
 
 ```lua
 Config = {}
 
 Config.Locale = 'fr'
 Config.Persistence = true
-Config.HeadbagTransparency = 0
+Config.HeadbagTransparency = 5
 
 Config.Items = {
     cuffs = 'ziptie',
@@ -62,49 +75,60 @@ Config.ReturnOnRemoval = {
     cuffs = false,
     headbag = false,
 }
+
+Config.Commands = {
+    restricted = 'group.admin',
+    ziptie = 'ziptie',
+    unziptie = 'unziptie',
+    headbag = 'headbag',
+    unheadbag = 'unheadbag',
+}
 ```
 
 | Option | Description |
 |--------|-------------|
-| `Config.Locale` | Language code (`en`, `fr`, or any custom locale file you add) |
-| `Config.Persistence` | Save and restore cuff/headbag states across reconnects and server restarts |
-| `Config.HeadbagTransparency` | Bag overlay transparency from `0` (opaque) to `100` (invisible) |
-| `Config.Items.cuffs` | ox_inventory item name for zip ties |
-| `Config.Items.headbag` | ox_inventory item name for headbags |
-| `Config.ReturnOnRemoval.cuffs` | Return the zip tie to the remover when set to `true` |
-| `Config.ReturnOnRemoval.headbag` | Return the headbag to the remover when set to `true` |
+| `Config.Locale` | Language code (`en`, `fr`, or any custom locale file you add). |
+| `Config.Persistence` | Save and restore cuff/headbag states across reconnects and server restarts. |
+| `Config.HeadbagTransparency` | Bag overlay transparency from `0` opaque to `100` invisible. |
+| `Config.Items.cuffs` | ox_inventory item name for zip ties. |
+| `Config.Items.headbag` | ox_inventory item name for headbags. |
+| `Config.ReturnOnRemoval.cuffs` | Return the zip tie to the remover when set to `true`. |
+| `Config.ReturnOnRemoval.headbag` | Return the headbag to the remover when set to `true`. |
+| `Config.Commands.restricted` | ACE/group permission required for admin commands. |
+| `Config.Commands.ziptie` | Command name used to zip tie a player. |
+| `Config.Commands.unziptie` | Command name used to remove zip ties. |
+| `Config.Commands.headbag` | Command name used to put a headbag on a player. |
+| `Config.Commands.unheadbag` | Command name used to remove a headbag. |
 
-## Adding a Language
+## Admin Commands
 
-Create a new file in `locales/` with your language code (e.g. `locales/es.json`):
+Commands are registered server-side with `lib.addCommand` and default to `group.admin`.
 
-```json
-{
-    "cuff_label": "Atar",
-    "uncuff_label": "Desatar",
-    "put_in_vehicle": "Subir al vehículo",
-    "take_out_vehicle": "Bajar del vehículo",
-    "no_vehicle_nearby": "No hay vehículo cerca",
-    "no_free_seat": "No hay asiento disponible",
-    "headbag_label": "Poner/Quitar bolsa",
-    "headbag_put_on": "Le pusiste una bolsa a un jugador",
-    "headbag_taken_off": "Alguien te quitó la bolsa",
-    "headbag_progress": "Bolsa..."
-}
-```
+| Command | Description |
+|---------|-------------|
+| `/ziptie id` | Zip tie a player without consuming an item. |
+| `/unziptie id` | Remove zip ties without returning an item. |
+| `/headbag id` | Put a headbag on a player without consuming an item. |
+| `/unheadbag id` | Remove a headbag without returning an item. |
 
-Then set `Config.Locale = 'es'` in the config.
+Command names and permissions can be changed in `Config.Commands`.
 
 ## ox_target Interactions
 
 | Action | Icon | Distance | Condition |
 |--------|------|----------|-----------|
-| Tie up | `fa-handcuffs` | 1.5 | Target not cuffed, requires zip tie item |
-| Untie | `fa-handcuffs` | 1.5 | Target is cuffed, no item required |
-| Put in vehicle | `fa-car-side` | 2.5 | Target is cuffed and on foot |
-| Take out of vehicle | `fa-car-side` | 5.0 | Target is cuffed and in vehicle |
-| Put on headbag | `fa-mask` | 2.0 | Target on foot, requires headbag item |
-| Remove headbag | `fa-mask` | 2.0 | Target is headbagged, no item required |
+| Tie up | `fa-handcuffs` | 1.5 | Target not cuffed, requires zip tie item. |
+| Untie | `fa-handcuffs` | 1.5 | Target is cuffed, no item required. |
+| Put in vehicle | `fa-car-side` | 2.5 | Target is cuffed and on foot. |
+| Take out of vehicle | `fa-car-side` | 5.0 | Target is cuffed and in vehicle. |
+| Put on headbag | `fa-mask` | 2.0 | Target on foot, requires headbag item. |
+| Remove headbag | `fa-mask` | 2.0 | Target is headbagged, no item required. |
+
+## Adding a Language
+
+Create a new file in `locales/` with your language code, for example `locales/es.json`, then set `Config.Locale = 'es'`.
+
+Command descriptions also use locales, so include the `command_*` keys from `locales/en.json` or `locales/fr.json`.
 
 ## Exports
 
@@ -118,38 +142,40 @@ exports.sam_gangactions:toggleHeadbag(ped)
 
 ## Security
 
-- All actions validated server-side via `lib.callback`
-- Server-side distance checks on every interaction
-- Server-side item verification via ox_inventory
-- Rate limiting (5s cooldown on cuffs/headbag, 2s on vehicle actions)
-- `GetInvokingResource()` checks on client net events
-- Failed distance checks logged with player name and ID via `warn()`
-- State managed through state bags (server authority)
+- All item interactions are validated server-side through `lib.callback`.
+- Server-side distance checks are used on every interaction.
+- Server-side item verification is handled through ox_inventory.
+- Admin commands are restricted through `lib.addCommand` permissions.
+- Rate limiting is applied to cuffs/headbag actions and vehicle actions.
+- Client net events use `GetInvokingResource()` checks.
+- Failed distance checks are logged with player name and ID through `warn()`.
+- State is managed through replicated state bags with server authority.
 
 ## Structure
 
-```
+```text
 sam_gangactions/
-├── fxmanifest.lua
-├── shared/
-│   └── config.lua
-├── client/
-│   ├── init.lua          -- locale init + state restore
-│   ├── cuffs.lua         -- zip tie + vehicle escort
-│   └── headbag.lua       -- headbag + NUI blindfold
-├── server/
-│   ├── init.lua          -- rate limiting utility
-│   ├── persistence.lua   -- KVP state persistence
-│   ├── cuffs.lua         -- cuff validation callbacks
-│   └── headbag.lua       -- headbag validation callback
-├── locales/
-│   ├── en.json
-│   └── fr.json
-└── html/
-    ├── index.html
-    ├── bag.png
-    ├── css/headbag.css
-    └── js/headbagHandler.js
+|-- fxmanifest.lua
+|-- shared/
+|   `-- config.lua
+|-- client/
+|   |-- init.lua          -- locale init + state restore
+|   |-- cuffs.lua         -- zip tie + vehicle escort
+|   `-- headbag.lua       -- headbag + NUI blindfold
+|-- server/
+|   |-- init.lua          -- locale init + rate limiting utility
+|   |-- persistence.lua   -- framework-aware KVP state persistence
+|   |-- cuffs.lua         -- cuff validation callbacks
+|   |-- headbag.lua       -- headbag validation callback
+|   `-- commands.lua      -- admin commands
+|-- locales/
+|   |-- en.json
+|   `-- fr.json
+`-- html/
+    |-- index.html
+    |-- bag.png
+    |-- css/headbag.css
+    `-- js/headbagHandler.js
 ```
 
 ## License
