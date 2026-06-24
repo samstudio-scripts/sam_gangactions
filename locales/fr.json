@@ -11,5 +11,11 @@
     "headbag_put_on": "Vous avez mis un sac sur un joueur",
     "headbag_removed": "Vous avez retiré le sac d'un joueur",
     "headbag_taken_off": "Quelqu'un vous a retiré le sac",
-    "headbag_progress": "Sac en cours..."
+    "headbag_progress": "Sac en cours...",
+
+    "command_target_help": "ID serveur du joueur cible",
+    "command_ziptie_help": "Menotter un joueur",
+    "command_unziptie_help": "Demenotter un joueur",
+    "command_headbag_help": "Mettre un sac sur un joueur",
+    "command_unheadbag_help": "Retirer le sac d'un joueur"
 }

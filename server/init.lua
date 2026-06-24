@@ -1,6 +1,7 @@
 local cooldowns = {}
 
 SamGangActions = SamGangActions or {}
+lib.locale(Config.Locale)
 
 ---@param source number
 ---@param action string

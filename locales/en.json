@@ -11,5 +11,11 @@
     "headbag_put_on": "You put a bag on a player",
     "headbag_removed": "You removed a player's headbag",
     "headbag_taken_off": "Someone removed your bag",
-    "headbag_progress": "Headbag..."
+    "headbag_progress": "Headbag...",
+
+    "command_target_help": "Target player's server ID",
+    "command_ziptie_help": "Zip tie a player",
+    "command_unziptie_help": "Remove zip tie from a player",
+    "command_headbag_help": "Put a headbag on a player",
+    "command_unheadbag_help": "Remove a headbag from a player"
 }

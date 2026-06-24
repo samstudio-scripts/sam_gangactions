@@ -10,7 +10,7 @@ local function addPlayerStateCommand(commandName, help, stateKey, stateValue, se
             {
                 name = 'id',
                 type = 'playerId',
-                help = 'Target player server id',
+                help = locale('command_target_help'),
             },
         },
     }, function(source, args)
@@ -24,7 +24,7 @@ local function addPlayerStateCommand(commandName, help, stateKey, stateValue, se
     end)
 end
 
-addPlayerStateCommand(commandConfig.ziptie or 'ziptie', 'Zip tie a player', 'hasCuffs', true, SamGangActions.SetCuffs)
-addPlayerStateCommand(commandConfig.unziptie or 'unziptie', 'Remove zip tie from a player', 'hasCuffs', false, SamGangActions.SetCuffs)
-addPlayerStateCommand(commandConfig.headbag or 'headbag', 'Put a headbag on a player', 'hasHeadbag', true, SamGangActions.SetHeadbag)
-addPlayerStateCommand(commandConfig.unheadbag or 'unheadbag', 'Remove a headbag from a player', 'hasHeadbag', false, SamGangActions.SetHeadbag)
+addPlayerStateCommand(commandConfig.ziptie or 'ziptie', locale('command_ziptie_help'), 'hasCuffs', true, SamGangActions.SetCuffs)
+addPlayerStateCommand(commandConfig.unziptie or 'unziptie', locale('command_unziptie_help'), 'hasCuffs', false, SamGangActions.SetCuffs)
+addPlayerStateCommand(commandConfig.headbag or 'headbag', locale('command_headbag_help'), 'hasHeadbag', true, SamGangActions.SetHeadbag)
+addPlayerStateCommand(commandConfig.unheadbag or 'unheadbag', locale('command_unheadbag_help'), 'hasHeadbag', false, SamGangActions.SetHeadbag)
