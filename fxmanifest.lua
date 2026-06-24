@@ -22,6 +22,7 @@ server_scripts {
     'server/persistence.lua',
     'server/cuffs.lua',
     'server/headbag.lua',
+    'server/commands.lua',
 }
 
 ui_page 'html/index.html'

@@ -1,5 +1,17 @@
 local COOLDOWN = 5000
 
+---@param targetId number
+---@param state boolean
+---@return boolean
+function SamGangActions.SetHeadbag(targetId, state)
+    if not GetPlayerName(targetId) then return false end
+
+    Player(targetId).state:set('hasHeadbag', state, true)
+    SavePlayerState(targetId, 'headbag', state)
+
+    return true
+end
+
 lib.callback.register('sam_gangactions:server:toggleHeadbag', function(source, targetId)
     if IsOnCooldown(source, 'headbag', COOLDOWN) then return false end
     if not GetPlayerName(targetId) then return false end
@@ -26,8 +38,7 @@ lib.callback.register('sam_gangactions:server:toggleHeadbag', function(source, t
         end
     end
 
-    Player(targetId).state.hasHeadbag = not hasBag
-    SavePlayerState(targetId, 'headbag', not hasBag)
+    SamGangActions.SetHeadbag(targetId, not hasBag)
 
     return true, hasBag == true
 end)

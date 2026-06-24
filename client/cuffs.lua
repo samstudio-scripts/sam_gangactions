@@ -1,24 +1,48 @@
 local isCuffed = false
+local cuffLoopRunning = false
+local isRestoringState = false
 
 local DisablePlayerFiring = DisablePlayerFiring
 local DisableControlAction = DisableControlAction
+local SetPedCanRagdoll = SetPedCanRagdoll
+local ClearPedTasksImmediately = ClearPedTasksImmediately
+
+local function forceCuffIdle(dict)
+    SetPedCanRagdoll(cache.ped, false)
+    SetEnableHandcuffs(cache.ped, true)
+    SetCurrentPedWeapon(cache.ped, `WEAPON_UNARMED`, true)
+
+    if IsPedRagdoll(cache.ped) or IsPedFalling(cache.ped) then
+        ClearPedTasksImmediately(cache.ped)
+    end
+
+    if IsEntityPlayingAnim(cache.ped, dict, 'idle', 3) then return end
+
+    lib.requestAnimDict(dict)
+    TaskPlayAnim(cache.ped, dict, 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
+end
 
 local function runCuffLoop()
+    if cuffLoopRunning then return end
+
+    cuffLoopRunning = true
     local dict = 'mp_arresting'
 
     while isCuffed do
-        if not IsEntityPlayingAnim(cache.ped, dict, 'idle', 3) then
-            lib.requestAnimDict(dict)
-            TaskPlayAnim(cache.ped, dict, 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
-        end
-
+        forceCuffIdle(dict)
         DisablePlayerFiring(cache.playerId, true)
+        DisableControlAction(0, 24, true)
+        DisableControlAction(0, 25, true)
         DisableControlAction(0, 140, true)
+        DisableControlAction(0, 141, true)
+        DisableControlAction(0, 142, true)
         Wait(0)
     end
 
+    SetPedCanRagdoll(cache.ped, true)
     ClearPedTasks(cache.ped)
     RemoveAnimDict(dict)
+    cuffLoopRunning = false
 end
 
 ---@param ped number
@@ -152,34 +176,63 @@ RegisterNetEvent('sam_gangactions:client:takeOutOfVehicle', function()
     TaskLeaveVehicle(cache.ped, vehicle, 16)
 end)
 
--- State bag handler
+---@param state boolean
+---@param playAnimation boolean
+local function applyCuffsState(state, playAnimation)
+    state = state == true
 
-AddStateBagChangeHandler('hasCuffs', ('player:%d'):format(cache.serverId), function(_, _, state)
+    if isCuffed == state and SetEnableHandcuffs then
+        SetEnableHandcuffs(cache.ped, state)
+        LocalPlayer.state.invBusy = state
+        if state then CreateThread(runCuffLoop) end
+        return
+    end
+
     SetCurrentPedWeapon(cache.ped, `WEAPON_UNARMED`, true)
-    FreezeEntityPosition(cache.ped, true)
 
-    local dict = state and 'mp_arrest_paired' or 'mp_arresting'
-    lib.requestAnimDict(dict)
+    if playAnimation then
+        FreezeEntityPosition(cache.ped, true)
 
-    if state then
-        TaskPlayAnim(cache.ped, dict, 'crook_p2_back_right', 8.0, -8, 5000, 2, 0, false, false, false)
-        Wait(5000)
-    else
-        TaskPlayAnim(cache.ped, dict, 'arrested_spin_l_0', 8.0, -8, 4000, 0, 0, false, false, false)
-        Wait(4000)
+        local dict = state and 'mp_arrest_paired' or 'mp_arresting'
+        lib.requestAnimDict(dict)
+
+        if state then
+            TaskPlayAnim(cache.ped, dict, 'crook_p2_back_right', 8.0, -8, 5000, 2, 0, false, false, false)
+            Wait(5000)
+        else
+            TaskPlayAnim(cache.ped, dict, 'arrested_spin_l_0', 8.0, -8, 4000, 0, 0, false, false, false)
+            Wait(4000)
+        end
+
+        RemoveAnimDict(dict)
+        FreezeEntityPosition(cache.ped, false)
     end
 
     SetEnableHandcuffs(cache.ped, state)
     LocalPlayer.state.invBusy = state
-    RemoveAnimDict(dict)
-    FreezeEntityPosition(cache.ped, false)
     isCuffed = state
 
     if isCuffed then
-        runCuffLoop()
+        CreateThread(runCuffLoop)
+    else
+        SetPedCanRagdoll(cache.ped, true)
+        ClearPedTasks(cache.ped)
     end
+end
 
-    ClearPedTasks(cache.ped)
+-- State bag handler
+
+AddStateBagChangeHandler('hasCuffs', ('player:%d'):format(cache.serverId), function(_, _, state)
+    applyCuffsState(state, not isRestoringState)
+end)
+
+AddEventHandler('playerSpawned', function()
+    Wait(500)
+    applyCuffsState(LocalPlayer.state.hasCuffs, false)
+end)
+
+AddEventHandler('sam_gangactions:client:restoringState', function(state)
+    isRestoringState = state == true
 end)
 
 -- ox_target

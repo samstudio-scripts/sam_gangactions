@@ -20,6 +20,8 @@ local function removeHeadbag()
 end
 
 local function applyHeadbag()
+    removeHeadbag()
+
     local model = `prop_money_bag_01`
     local transparency = math.min(math.max(tonumber(Config.HeadbagTransparency) or 0, 0), 100)
     lib.requestModel(model)
@@ -104,7 +106,13 @@ exports.ox_target:addGlobalPlayer({
 })
 
 AddEventHandler('playerSpawned', function()
-    removeHeadbag()
+    Wait(500)
+
+    if LocalPlayer.state.hasHeadbag then
+        applyHeadbag()
+    else
+        removeHeadbag()
+    end
 end)
 
 AddEventHandler('onResourceStop', function(resourceName)

@@ -1,5 +1,7 @@
 local cooldowns = {}
 
+SamGangActions = SamGangActions or {}
+
 ---@param source number
 ---@param action string
 ---@param duration number cooldown in ms

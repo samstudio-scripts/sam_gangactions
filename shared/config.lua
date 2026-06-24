@@ -13,3 +13,11 @@ Config.ReturnOnRemoval = {
     cuffs = false,
     headbag = false,
 }
+
+Config.Commands = {
+    restricted = 'group.admin',
+    ziptie = 'ziptie',
+    unziptie = 'unziptie',
+    headbag = 'headbag',
+    unheadbag = 'unheadbag',
+}

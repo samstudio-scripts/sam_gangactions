@@ -1,5 +1,17 @@
 local COOLDOWN = 5000
 
+---@param targetId number
+---@param state boolean
+---@return boolean
+function SamGangActions.SetCuffs(targetId, state)
+    if not GetPlayerName(targetId) then return false end
+
+    Player(targetId).state:set('hasCuffs', state, true)
+    SavePlayerState(targetId, 'cuffs', state)
+
+    return true
+end
+
 lib.callback.register('sam_gangactions:server:toggleCuffs', function(source, targetId)
     if IsOnCooldown(source, 'cuffs', COOLDOWN) then return false end
     if not GetPlayerName(targetId) then return false end
@@ -26,8 +38,7 @@ lib.callback.register('sam_gangactions:server:toggleCuffs', function(source, tar
         end
     end
 
-    Player(targetId).state.hasCuffs = not wasCuffed
-    SavePlayerState(targetId, 'cuffs', not wasCuffed)
+    SamGangActions.SetCuffs(targetId, not wasCuffed)
 
     return true, wasCuffed
 end)
